@@ -12,3 +12,14 @@
  */
 
 package app
+
+import "github.com/urfave/cli/v2"
+
+var (
+	BinaryFlag = cli.StringFlag{
+		Name:    "binary",
+		Aliases: []string{"bin"},
+		Usage:   "Input sample path for running and tracing",
+		Value:   "C:\\Windows\\System32\\cmd.exe",
+	}
+)

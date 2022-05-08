@@ -12,3 +12,18 @@
  */
 
 package app
+
+import "github.com/urfave/cli/v2"
+
+func runCmd() *cli.Command {
+	return &cli.Command{
+		Name:    "run",
+		Aliases: []string{"start"},
+		Usage:   "Start etw for tarcaing windows kernel event",
+		Action:  action,
+	}
+}
+
+func action(*cli.Context) error {
+	return nil
+}

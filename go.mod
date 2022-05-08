@@ -1,4 +1,4 @@
-module github.com/saferun/monitor-windows
+module github.com/saferun/owl
 
 go 1.17
 

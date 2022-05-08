@@ -12,3 +12,15 @@
  */
 
 package main
+
+import (
+	"os"
+
+	"github.com/saferun/owl/internal/app"
+)
+
+func main() {
+	if err := app.New().Run(os.Args); err != nil {
+		panic(err)
+	}
+}
