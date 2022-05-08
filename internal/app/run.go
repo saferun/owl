@@ -19,7 +19,7 @@ func runCmd() *cli.Command {
 	return &cli.Command{
 		Name:    "run",
 		Aliases: []string{"start"},
-		Usage:   "Start etw for tarcaing windows kernel event",
+		Usage:   `Start etw for tarcaing windows kernel event and run http server`,
 		Action:  action,
 	}
 }
