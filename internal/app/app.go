@@ -11,4 +11,13 @@
  * with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-package main
+package app
+
+import "github.com/urfave/cli/v2"
+
+func New() *cli.App {
+	return &cli.App{
+		Name:  "owl",
+		Usage: "",
+	}
+}
