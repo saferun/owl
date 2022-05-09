@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 by Mel2oo <https://github.com/saferun/monitor-windows>
+ * Copyright 2022 by Mel2oo <https://github.com/saferun/owl>
  *
  * Licensed under the GNU General Public License version 3 (GPLv3)
  *
@@ -12,3 +12,21 @@
  */
 
 package server
+
+import "github.com/labstack/echo/v4"
+
+type server struct {
+	*echo.Echo
+}
+
+func New() *server {
+	srv := server{
+		Echo: echo.New(),
+	}
+
+	if err := srv.register(); err != nil {
+		return nil
+	}
+
+	return &srv
+}

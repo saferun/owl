@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 by Mel2oo <https://github.com/saferun/monitor-windows>
+ * Copyright 2022 by Mel2oo <https://github.com/saferun/owl>
  *
  * Licensed under the GNU General Public License version 3 (GPLv3)
  *
@@ -13,7 +13,10 @@
 
 package app
 
-import "github.com/urfave/cli/v2"
+import (
+	"github.com/saferun/owl/internal/server"
+	"github.com/urfave/cli/v2"
+)
 
 func runCmd() *cli.Command {
 	return &cli.Command{
@@ -21,9 +24,22 @@ func runCmd() *cli.Command {
 		Aliases: []string{"start"},
 		Usage:   `Start etw for tarcaing windows kernel event and run http server`,
 		Action:  action,
+		Flags: []cli.Flag{
+			&ConfigFlag,
+			&BinaryFlag,
+		},
 	}
 }
 
 func action(*cli.Context) error {
+	// TODO: query process map
+
+	// TODO: start etw
+
+	// TODO: start http
+	if err := server.New().Start(":"); err != nil {
+		return err
+	}
+
 	return nil
 }

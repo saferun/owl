@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 by Mel2oo <https://github.com/saferun/monitor-windows>
+ * Copyright 2022 by Mel2oo <https://github.com/saferun/owl>
  *
  * Licensed under the GNU General Public License version 3 (GPLv3)
  *

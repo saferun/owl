@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 by Mel2oo <https://github.com/saferun/monitor-windows>
+ * Copyright 2022 by Mel2oo <https://github.com/saferun/owl>
  *
  * Licensed under the GNU General Public License version 3 (GPLv3)
  *
@@ -16,10 +16,17 @@ package app
 import "github.com/urfave/cli/v2"
 
 var (
+	ConfigFlag = cli.StringFlag{
+		Name:    "config",
+		Aliases: []string{"c"},
+		Usage:   "input config path",
+		Value:   "../config/owl.toml",
+	}
+
 	BinaryFlag = cli.StringFlag{
 		Name:    "binary",
 		Aliases: []string{"bin"},
-		Usage:   "Input sample path for running and tracing",
+		Usage:   "input sample path for running and tracing",
 		Value:   "C:\\Windows\\System32\\cmd.exe",
 	}
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 by Mel2oo <https://github.com/saferun/monitor-windows>
+ * Copyright 2022 by Mel2oo <https://github.com/saferun/owl>
  *
  * Licensed under the GNU General Public License version 3 (GPLv3)
  *
@@ -12,3 +12,23 @@
  */
 
 package server
+
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4"
+)
+
+func (s *server) register() error {
+	r := s.Group("/owl/v1")
+
+	{
+		r.POST("/submit", s.submit)
+	}
+
+	return nil
+}
+
+func (s *server) submit(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, World!")
+}
