@@ -24,11 +24,16 @@ func (s *server) register() error {
 
 	{
 		r.POST("/submit", s.submit)
+		r.POST("/restlt", s.result)
 	}
 
 	return nil
 }
 
 func (s *server) submit(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, World!")
+}
+
+func (s *server) result(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
 }
