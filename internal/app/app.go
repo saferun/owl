@@ -12,15 +12,3 @@
  */
 
 package app
-
-import "github.com/urfave/cli/v2"
-
-func New() *cli.App {
-	return &cli.App{
-		Name:  "owl",
-		Usage: "owl are used for tracing windows kernel event",
-		Commands: cli.Commands{
-			runCmd(),
-		},
-	}
-}

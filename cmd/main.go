@@ -16,11 +16,11 @@ package main
 import (
 	"os"
 
-	"github.com/saferun/owl/internal/app"
+	"github.com/saferun/owl/internal/cli"
 )
 
 func main() {
-	if err := app.New().Run(os.Args); err != nil {
+	if err := cli.New().Run(os.Args); err != nil {
 		panic(err)
 	}
 }
