@@ -14,6 +14,7 @@
 package server
 
 import (
+	"mime/multipart"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,7 +32,21 @@ func (s *server) register() error {
 }
 
 func (s *server) submit(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	type request struct {
+		File *multipart.FileHeader `form:"file"`
+	}
+
+	type resppnse struct {
+		Code int `json:"code"`
+	}
+
+	var req request
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusOK, &resppnse{ParamErrorCode})
+	}
+
+	return c.JSON(http.StatusOK, &resppnse{RequestOk})
 }
 
 func (s *server) result(c echo.Context) error {

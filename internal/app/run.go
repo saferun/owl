@@ -31,7 +31,7 @@ func runCmd() *cli.Command {
 	}
 }
 
-func action(*cli.Context) error {
+func action(ctx *cli.Context) error {
 	// TODO: query process map
 
 	// TODO: start etw
