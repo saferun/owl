@@ -23,6 +23,12 @@ var (
 		Value:   "../config/owl.toml",
 	}
 
+	FilterFlag = cli.StringFlag{
+		Name:    "filter",
+		Aliases: []string{"flt"},
+		Usage:   "filter expressions for tracing",
+	}
+
 	BinaryFlag = cli.StringFlag{
 		Name:    "binary",
 		Aliases: []string{"bin"},

@@ -12,3 +12,31 @@
  */
 
 package config
+
+import (
+	"github.com/spf13/viper"
+)
+
+type Config struct {
+	Server struct {
+		Address string `mapstructure:"address"`
+	} `mapstructure:"server"`
+	Yara struct {
+		Enabled bool     `mapstructure:"enable"`
+		Rules   []string `mapstructure:"rules"`
+	} `mapstructure:"yara"`
+}
+
+func Load(path string) (v *Config, err error) {
+	viper.SetConfigFile(path)
+
+	if err = viper.ReadInConfig(); err != nil {
+		return nil, err
+	}
+
+	if err = viper.Unmarshal(&v); err != nil {
+		return nil, err
+	}
+
+	return
+}

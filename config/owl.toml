@@ -1,4 +1,8 @@
-[http]
+[server]
     address = ":9290"
 
-    
+[yara]
+    # if enabled, when process start will scan process memory
+    enabled = false
+    # rule paths
+    rules = []
