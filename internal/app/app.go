@@ -12,3 +12,28 @@
  */
 
 package app
+
+import (
+	"github.com/saferun/owl/pkg/etw"
+	"github.com/saferun/owl/pkg/stream"
+)
+
+type Controller struct {
+	etw    *etw.EventTrace
+	stream *stream.Consumer
+}
+
+func NewController() *Controller {
+	return &Controller{
+		etw:    etw.NewEventTrace(),
+		stream: stream.NewConsumer(),
+	}
+}
+
+func (c *Controller) Start() error {
+	return nil
+}
+
+func (c *Controller) Process() error {
+	return nil
+}

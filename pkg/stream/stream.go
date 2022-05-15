@@ -12,3 +12,10 @@
  */
 
 package stream
+
+type Consumer struct {
+}
+
+func NewConsumer() *Consumer {
+	return nil
+}
