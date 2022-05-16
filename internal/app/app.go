@@ -14,8 +14,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
 	"github.com/saferun/owl/internal/config"
@@ -53,12 +51,16 @@ func (c *Controller) Start() error {
 	return nil
 }
 
+const callbackNext = uintptr(1)
+
 func (c *Controller) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
-	fmt.Println("buffer stats")
-	return 1
+	return callbackNext
 }
 
-func (c *Controller) ProcessEventCallback(*tdh.EventRecord) uintptr {
-	fmt.Println("process event")
-	return 1
+func (c *Controller) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
+	// pid := evt.EventHeader.ProcessId
+	// tid := evt.EventHeader.ThreadId
+	// evt.EventHeader.EventDescriptor.Opcode
+	// syscall.GUID
+	return callbackNext
 }
