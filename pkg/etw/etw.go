@@ -29,23 +29,20 @@ const (
 )
 
 type EventTrace struct {
-	Handle evntrace.TraceHandle
+	opts   *Options
+	handle evntrace.TraceHandle
 }
 
-func NewEventTrace() *EventTrace {
-	return nil
+func NewEventTrace(opts ...Option) (e *EventTrace) {
+	e.opts = newOpts()
+	for _, o := range opts {
+		o(e.opts)
+	}
+
+	return
 }
 
 func (e *EventTrace) Start() error {
-	flags := evntrace.EventTraceFlagProcess
-	flags |= evntrace.EventTraceFlagThread
-	flags |= evntrace.EventTraceFlagImageLoad
-	flags |= evntrace.EventTraceFlagNetworkTCPIP
-	flags |= evntrace.EventTraceFlagRegistry
-	flags |= evntrace.EventTraceFlagDiskFileIO
-	flags |= evntrace.EventTraceFlagFileIO
-	flags |= evntrace.EventTraceFlagFileIOInit
-
 	bufferSize := maxBufferSize
 	minBuffers := uint32(runtime.NumCPU() * 2)
 	maxBuffers := minBuffers + 20
@@ -62,16 +59,21 @@ func (e *EventTrace) Start() error {
 		MaximumBuffers:    types.ULONG(maxBuffers),
 		LogFileMode:       evntrace.EventTraceRealTimeMode,
 		FlushTimer:        types.ULONG(flushTimer.Seconds()),
-		EnableFlags:       flags,
+		EnableFlags:       e.opts.flags,
 		LogFileNameOffset: 0,
 		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(evntrace.EventTraceProperties{})),
 	}
 
-	errno := evntrace.StartTrace(&e.Handle, evntrace.KernelLoggerName, props)
-	if errno != 0 {
-		fmt.Println("StartTrace failure", errno)
-		return nil
+	errno := evntrace.StartTrace(&e.handle, evntrace.KernelLoggerName, props)
+	switch errno {
+	case types.ULONG(types.ERROR_SUCCESS):
+
+	case types.ULONG(types.ERROR_ALREADY_EXISTS):
+
+	default:
+		return fmt.Errorf("start trace error: %d", errno)
 	}
+
 	return nil
 }
 

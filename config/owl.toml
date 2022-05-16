@@ -1,6 +1,31 @@
 [server]
     address = ":9290"
 
+[etw]
+    # if enabled, etw will trace process event
+    [etw.process]
+        enabled = true
+    
+    # if enabled, etw will trace thread event
+    [etw.thread]
+        enabled = true
+
+    # if enabled, etw will trace imageload event
+    [etw.image]
+        enabled = true
+
+    # if enabled, etw will trace tcp/ip event
+    [etw.tcpip]
+        enabled = true
+
+    # if enabled, etw will trace registry event
+    [etw.registry]
+        enabled = true
+    
+    # if enabled, etw will trace diskfileio/fileio/fileioinit event
+    [etw.diskio]
+        enabled = true
+
 [yara]
     # if enabled, when process start will scan process memory
     enabled = false

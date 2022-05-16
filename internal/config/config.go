@@ -21,6 +21,26 @@ type Config struct {
 	Server struct {
 		Address string `mapstructure:"address"`
 	} `mapstructure:"server"`
+	Etw struct {
+		Process struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"process"`
+		Thread struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"thread"`
+		Image struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"image"`
+		TcpIP struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"tcpip"`
+		Reg struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"registry"`
+		DiskIO struct {
+			Enabled bool `mapstructure:"enable"`
+		} `mapstructure:"diskio"`
+	} `mapstructure:"etw"`
 	Yara struct {
 		Enabled bool     `mapstructure:"enable"`
 		Rules   []string `mapstructure:"rules"`
