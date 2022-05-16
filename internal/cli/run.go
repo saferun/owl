@@ -17,6 +17,7 @@ import (
 	"github.com/saferun/owl/internal/app"
 	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/internal/server"
+	"github.com/saferun/owl/pkg/logger"
 	"github.com/urfave/cli/v2"
 )
 
@@ -44,12 +45,15 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	// TODO: start etw
+	if err = logger.Init(toml.Logger); err != nil {
+		return err
+	}
+
 	if err := app.NewController(toml).Start(); err != nil {
 		return err
 	}
 
-	// TODO: start http
+	// start http
 	if err := server.New().Start(toml.Server.Address); err != nil {
 		return err
 	}

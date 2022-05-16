@@ -22,6 +22,7 @@ import (
 
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/types"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -78,7 +79,7 @@ func (e *EventTrace) Start() error {
 			return nil
 		}
 	}
-	fmt.Println("set trace infotmation error", errno)
+	logrus.Warnf("set trace infotmation error %d", errno)
 
 	return nil
 }

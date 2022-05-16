@@ -1,6 +1,20 @@
 [server]
     address = ":9290"
 
+[logger]
+    # logger level
+    level = "info"
+    # log file max size (MB)
+    max-size = 100
+    # log file save days
+    max-age = 15
+    # log file max num
+    max-backups = 15
+    # log file storage dir
+    output = "/home/whales/log"
+    # enabled stdout
+    stdout = false
+
 [etw]
     # if enabled, etw will trace process event
     [etw.process]

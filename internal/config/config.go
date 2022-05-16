@@ -14,37 +14,45 @@
 package config
 
 import (
+	"github.com/saferun/owl/pkg/logger"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Server struct {
-		Address string `mapstructure:"address"`
-	} `mapstructure:"server"`
-	Etw struct {
-		Process struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"process"`
-		Thread struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"thread"`
-		Image struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"image"`
-		TcpIP struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"tcpip"`
-		Reg struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"registry"`
-		DiskIO struct {
-			Enabled bool `mapstructure:"enable"`
-		} `mapstructure:"diskio"`
-	} `mapstructure:"etw"`
-	Yara struct {
-		Enabled bool     `mapstructure:"enable"`
-		Rules   []string `mapstructure:"rules"`
-	} `mapstructure:"yara"`
+	Server Server        `mapstructure:"server"`
+	Logger logger.Config `mapstructure:"logger"`
+	Etw    ETW           `mapstructure:"etw"`
+	Yara   Yara          `mapstructure:"yara"`
+}
+
+type Server struct {
+	Address string `mapstructure:"address"`
+}
+
+type ETW struct {
+	Process struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"process"`
+	Thread struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"thread"`
+	Image struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"image"`
+	TcpIP struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"tcpip"`
+	Reg struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"registry"`
+	DiskIO struct {
+		Enabled bool `mapstructure:"enable"`
+	} `mapstructure:"diskio"`
+}
+
+type Yara struct {
+	Enabled bool     `mapstructure:"enable"`
+	Rules   []string `mapstructure:"rules"`
 }
 
 func Load(path string) (v *Config, err error) {
