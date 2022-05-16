@@ -13,66 +13,88 @@
 
 package etw
 
-import "github.com/mel2oo/win32/advapi32/evntrace"
+import (
+	"github.com/mel2oo/win32/advapi32/evntrace"
+	"github.com/mel2oo/win32/tdh"
+)
 
-type Option func(*Options)
+type option func(*options)
 
-type Options struct {
-	flags evntrace.EventEnableFlags
+type options struct {
+	flags          evntrace.EventEnableFlags
+	bufferCallback BufferStatsCallback
+	eventCallback  ProcessEventCallback
 }
 
-func newOpts() *Options {
-	return &Options{
+func newopts() *options {
+	return &options{
 		flags: evntrace.EventTraceFlagProcess,
 	}
 }
 
-func WithProcess(enabled bool) Option {
-	return func(o *Options) {
+func WithProcess(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagProcess
 		}
 	}
 }
 
-func WithThread(enabled bool) Option {
-	return func(o *Options) {
+func WithThread(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagThread
 		}
 	}
 }
 
-func WithImageLoad(enabled bool) Option {
-	return func(o *Options) {
+func WithImageLoad(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagImageLoad
 		}
 	}
 }
 
-func WithTcpIP(enabled bool) Option {
-	return func(o *Options) {
+func WithTcpIP(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagNetworkTCPIP
 		}
 	}
 }
 
-func WithRegistry(enabled bool) Option {
-	return func(o *Options) {
+func WithRegistry(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagRegistry
 		}
 	}
 }
 
-func WithDiskIO(enabled bool) Option {
-	return func(o *Options) {
+func WithDiskIO(enabled bool) option {
+	return func(o *options) {
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagDiskFileIO
 			o.flags |= evntrace.EventTraceFlagFileIO
 			o.flags |= evntrace.EventTraceFlagFileIOInit
 		}
+	}
+}
+
+type (
+	BufferStatsCallback  func(*evntrace.EventTraceLogFile) uintptr
+	ProcessEventCallback func(*tdh.EventRecord) uintptr
+)
+
+func WithBufferCallback(fn BufferStatsCallback) option {
+	return func(o *options) {
+		o.bufferCallback = fn
+	}
+}
+
+func WithEventCallback(fn ProcessEventCallback) option {
+	return func(o *options) {
+		o.eventCallback = fn
 	}
 }

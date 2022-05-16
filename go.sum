@@ -291,6 +291,14 @@ github.com/mel2oo/win32 v0.0.0-20220515133151-719715ebbc5c h1:nGoTkBshka8PULsB5i
 github.com/mel2oo/win32 v0.0.0-20220515133151-719715ebbc5c/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
 github.com/mel2oo/win32 v0.0.0-20220515134713-414f521cd31e h1:vXXcHYlW2EVnmGXLPRxleV77V1S6OPaZg3Cnuf2zOas=
 github.com/mel2oo/win32 v0.0.0-20220515134713-414f521cd31e/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220516054558-fb2ffd4fde79 h1:OCNCdD80blZ6dpd32usmzJyTH3khWWflTL1JMevsRD0=
+github.com/mel2oo/win32 v0.0.0-20220516054558-fb2ffd4fde79/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220516060706-371d0e926a31 h1:yT5xKvAKY+ZOkZYdjyfwX9DMDleyWRxssX9hvPN7kp0=
+github.com/mel2oo/win32 v0.0.0-20220516060706-371d0e926a31/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220516061653-39b78d220cab h1:1EbI3184V796wS6bLvw8gDi8pp7lFEd40Ei18tum3RQ=
+github.com/mel2oo/win32 v0.0.0-20220516061653-39b78d220cab/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220516080342-d2db3446001b h1:jTXqSRBp1EYXmyxZRJouc5vo0JlCLULefyO4o/KpnJE=
+github.com/mel2oo/win32 v0.0.0-20220516080342-d2db3446001b/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
 github.com/miekg/dns v1.1.26/go.mod h1:bPDLeHnStXmXAq1m/Ch/hvfNHr14JKNPMBo3VZKjuso=
 github.com/miekg/dns v1.1.41/go.mod h1:p6aan82bvRIyn+zDIv9xYNUpwa73JcSh9BKwknJysuI=
 github.com/mitchellh/cli v1.1.0/go.mod h1:xcISNoH86gajksDmfB23e/pu+B+GeFRMYmoHXxx3xhI=

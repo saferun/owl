@@ -14,26 +14,51 @@
 package app
 
 import (
+	"fmt"
+
+	"github.com/mel2oo/win32/advapi32/evntrace"
+	"github.com/mel2oo/win32/tdh"
+	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/pkg/etw"
 	"github.com/saferun/owl/pkg/stream"
 )
 
 type Controller struct {
+	config *config.Config
 	etw    *etw.EventTrace
 	stream *stream.Consumer
 }
 
-func NewController() *Controller {
-	return &Controller{
-		etw:    etw.NewEventTrace(),
-		stream: stream.NewConsumer(),
-	}
+func NewController(config *config.Config) *Controller {
+	c := &Controller{config: config}
+	c.stream = stream.NewConsumer()
+	c.etw = etw.NewEventTrace(
+		etw.WithProcess(config.Etw.Process.Enabled),
+		etw.WithBufferCallback(c.BufferStatsCallback),
+		etw.WithEventCallback(c.ProcessEventCallback),
+	)
+
+	return c
 }
 
 func (c *Controller) Start() error {
+	if err := c.etw.Start(); err != nil {
+		return err
+	}
+
+	if err := c.etw.Process(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (c *Controller) Process() error {
-	return nil
+func (c *Controller) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
+	fmt.Println("buffer stats")
+	return 1
+}
+
+func (c *Controller) ProcessEventCallback(*tdh.EventRecord) uintptr {
+	fmt.Println("process event")
+	return 1
 }

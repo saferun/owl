@@ -16,6 +16,7 @@ package etw
 import (
 	"fmt"
 	"runtime"
+	"syscall"
 	"time"
 	"unsafe"
 
@@ -29,26 +30,67 @@ const (
 )
 
 type EventTrace struct {
-	opts   *Options
+	opts   *options
+	props  *evntrace.EventTraceProperties
 	handle evntrace.TraceHandle
 }
 
-func NewEventTrace(opts ...Option) (e *EventTrace) {
-	e.opts = newOpts()
-	for _, o := range opts {
-		o(e.opts)
+func NewEventTrace(options ...option) *EventTrace {
+	opts := newopts()
+	for _, o := range options {
+		o(opts)
 	}
 
-	return
+	return &EventTrace{opts: opts}
 }
 
 func (e *EventTrace) Start() error {
+	errno := e.StartTrace()
+	if errno != types.ULONG(types.ERROR_SUCCESS) {
+		if errno == types.ULONG(types.ERROR_ALREADY_EXISTS) {
+			errno = evntrace.ControlTrace(0, evntrace.KernelLoggerName, e.props, types.ULONG(evntrace.EventTraceControlQuery))
+			if errno != types.ULONG(types.ERROR_SUCCESS) {
+				return fmt.Errorf("control query trace error: %d", errno)
+			}
+
+			errno = evntrace.ControlTrace(0, evntrace.KernelLoggerName, e.props, types.ULONG(evntrace.EventTraceControlStop))
+			if errno != types.ULONG(types.ERROR_SUCCESS) {
+				return fmt.Errorf("control stop trace error: %d", errno)
+			}
+
+			time.Sleep(time.Millisecond * 100)
+			if errno := e.StartTrace(); errno != types.ULONG(types.ERROR_SUCCESS) {
+				return fmt.Errorf("start trace error: %d", errno)
+			}
+		} else {
+			return fmt.Errorf("start trace error: %d", errno)
+		}
+	}
+
+	handle := e.handle
+	sysFlags := make([]uint32, 8)
+	errno = evntrace.TraceSetInformation(handle, evntrace.TraceSystemTraceEnableFlagsInfo, sysFlags, types.ULONG(len(sysFlags)))
+	if errno == types.ULONG(types.ERROR_SUCCESS) {
+		sysFlags[0] = uint32(e.opts.flags)
+		sysFlags[4] = uint32(evntrace.EventTraceFlagHandle)
+		errno = evntrace.TraceSetInformation(handle, evntrace.TraceSystemTraceEnableFlagsInfo, sysFlags, types.ULONG(len(sysFlags)))
+		if errno == types.ULONG(types.ERROR_SUCCESS) {
+			return nil
+		}
+	}
+	fmt.Println("set trace infotmation error", errno)
+
+	return nil
+}
+
+func (e *EventTrace) StartTrace() types.ULONG {
 	bufferSize := maxBufferSize
 	minBuffers := uint32(runtime.NumCPU() * 2)
 	maxBuffers := minBuffers + 20
 	flushTimer := time.Second
 
-	props := &evntrace.EventTraceProperties{
+	e.props = nil
+	e.props = &evntrace.EventTraceProperties{
 		Wnode: evntrace.WnodeHeader{
 			BufferSize: types.ULONG(unsafe.Sizeof(evntrace.EventTraceProperties{}) + 2*maxStringLen),
 			Guid:       types.GUID(evntrace.SystemTraceControlGuid),
@@ -64,20 +106,31 @@ func (e *EventTrace) Start() error {
 		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(evntrace.EventTraceProperties{})),
 	}
 
-	errno := evntrace.StartTrace(&e.handle, evntrace.KernelLoggerName, props)
-	switch errno {
-	case types.ULONG(types.ERROR_SUCCESS):
-
-	case types.ULONG(types.ERROR_ALREADY_EXISTS):
-
-	default:
-		return fmt.Errorf("start trace error: %d", errno)
-	}
-
-	return nil
+	return evntrace.StartTrace(&e.handle, evntrace.KernelLoggerName, e.props)
 }
 
 func (e *EventTrace) Process() error {
+	logname, err := syscall.UTF16PtrFromString(evntrace.KernelLoggerName)
+	if err != nil {
+		return err
+	}
+
+	logFile := evntrace.EventTraceLogFile{
+		LoggerName:     logname,
+		LogFileMode:    evntrace.EventTraceRealTimeMode | evntrace.EventTraceNoPerProcessorBuffering,
+		BufferCallback: syscall.NewCallback(e.opts.bufferCallback),
+		EventCallback:  syscall.NewCallback(e.opts.eventCallback),
+	}
+
+	handle := evntrace.OpenTrace(&logFile)
+
+	go func() {
+		errno := evntrace.ProcessTrace(&handle, 1, nil, nil)
+		if errno != types.ULONG(types.ERROR_SUCCESS) {
+			return
+		}
+	}()
+
 	return nil
 }
 
