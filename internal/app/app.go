@@ -18,11 +18,11 @@ import (
 
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
+	"github.com/mel2oo/win32/types"
 	"github.com/saferun/owl/internal/app/event"
 	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/pkg/etw"
 	"github.com/saferun/owl/pkg/stream"
-	"github.com/sirupsen/logrus"
 )
 
 type Controller struct {
@@ -63,8 +63,17 @@ func (c *Controller) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
 
 func (c *Controller) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId), evt.EventHeader.EventDescriptor.Opcode)
-	if len(etype.String()) > 0 {
-		logrus.Infof("event %s %d", etype.String(), evt.EventHeader.ProcessId)
+
+	if !etype.Exist() {
+		return callbackNext
+	}
+
+	var einfo tdh.TraceEventInfo
+	var size types.ULONG = 4096
+
+	errno := tdh.TdhGetEventInformation(evt, 0, nil, &einfo, &size)
+	if errno != types.ERROR_SUCCESS {
+		return callbackNext
 	}
 
 	return callbackNext

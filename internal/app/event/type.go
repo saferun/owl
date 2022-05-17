@@ -167,3 +167,14 @@ func (e EType) String() string {
 
 	return ""
 }
+
+func (e EType) Exist() bool {
+	switch e {
+	case OpcodeProcessCreate:
+		return true
+	case OpcodeProcessTerminate:
+		return true
+	}
+
+	return false
+}

@@ -284,6 +284,8 @@ github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27k
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/mel2oo/win32 v0.0.0-20220516080342-d2db3446001b h1:jTXqSRBp1EYXmyxZRJouc5vo0JlCLULefyO4o/KpnJE=
 github.com/mel2oo/win32 v0.0.0-20220516080342-d2db3446001b/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220517114750-046a0a4261db h1:drQuHIiDhdK4GRlpdsZ3fGOzBMzciQ+lb57QmDDcqBI=
+github.com/mel2oo/win32 v0.0.0-20220517114750-046a0a4261db/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
 github.com/miekg/dns v1.1.26/go.mod h1:bPDLeHnStXmXAq1m/Ch/hvfNHr14JKNPMBo3VZKjuso=
 github.com/miekg/dns v1.1.41/go.mod h1:p6aan82bvRIyn+zDIv9xYNUpwa73JcSh9BKwknJysuI=
 github.com/mitchellh/cli v1.1.0/go.mod h1:xcISNoH86gajksDmfB23e/pu+B+GeFRMYmoHXxx3xhI=
