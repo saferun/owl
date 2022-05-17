@@ -14,30 +14,26 @@
 package app
 
 import (
-	"syscall"
-
-	"github.com/mel2oo/win32/advapi32/evntrace"
-	"github.com/mel2oo/win32/tdh"
-	"github.com/mel2oo/win32/types"
-	"github.com/saferun/owl/internal/app/event"
+	"github.com/saferun/owl/internal/app/stream"
 	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/pkg/etw"
-	"github.com/saferun/owl/pkg/stream"
 )
 
 type Controller struct {
-	config *config.Config
-	etw    *etw.EventTrace
-	stream *stream.Consumer
+	config   *config.Config
+	producer *stream.Producer
+	consumer *stream.Consumer
+	etw      *etw.EventTrace
 }
 
 func NewController(config *config.Config) *Controller {
 	c := &Controller{config: config}
-	c.stream = stream.NewConsumer()
+	c.producer = stream.NewProducer()
+	c.consumer = stream.NewConsumer()
 	c.etw = etw.NewEventTrace(
 		etw.WithProcess(config.Etw.Process.Enabled),
-		etw.WithBufferCallback(c.BufferStatsCallback),
-		etw.WithEventCallback(c.ProcessEventCallback),
+		etw.WithBufferCallback(c.producer.BufferStatsCallback),
+		etw.WithEventCallback(c.producer.ProcessEventCallback),
 	)
 
 	return c
@@ -53,28 +49,4 @@ func (c *Controller) Start() error {
 	}
 
 	return nil
-}
-
-const callbackNext = uintptr(1)
-
-func (c *Controller) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
-	return callbackNext
-}
-
-func (c *Controller) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
-	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId), evt.EventHeader.EventDescriptor.Opcode)
-
-	if !etype.Exist() {
-		return callbackNext
-	}
-
-	var einfo tdh.TraceEventInfo
-	var size types.ULONG = 4096
-
-	errno := tdh.TdhGetEventInformation(evt, 0, nil, &einfo, &size)
-	if errno != types.ERROR_SUCCESS {
-		return callbackNext
-	}
-
-	return callbackNext
 }
