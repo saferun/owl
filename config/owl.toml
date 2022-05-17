@@ -13,7 +13,7 @@
     # log file storage dir
     output = "/home/whales/log"
     # enabled stdout
-    stdout = false
+    stdout = true
 
 [etw]
     # if enabled, etw will trace process event

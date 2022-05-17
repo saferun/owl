@@ -14,11 +14,15 @@
 package app
 
 import (
+	"syscall"
+
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
+	"github.com/saferun/owl/internal/app/event"
 	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/pkg/etw"
 	"github.com/saferun/owl/pkg/stream"
+	"github.com/sirupsen/logrus"
 )
 
 type Controller struct {
@@ -58,9 +62,10 @@ func (c *Controller) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
 }
 
 func (c *Controller) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
-	// pid := evt.EventHeader.ProcessId
-	// tid := evt.EventHeader.ThreadId
-	// evt.EventHeader.EventDescriptor.Opcode
-	// syscall.GUID
+	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId), evt.EventHeader.EventDescriptor.Opcode)
+	if len(etype.String()) > 0 {
+		logrus.Infof("event %s %d", etype.String(), evt.EventHeader.ProcessId)
+	}
+
 	return callbackNext
 }

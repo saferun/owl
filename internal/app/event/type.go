@@ -13,18 +13,19 @@
 
 package event
 
-import "syscall"
+import (
+	"syscall"
+)
 
-type EventType struct {
-	Guid   syscall.GUID
-	Opcode uint8
-}
+type EType [17]byte
 
-func Pack(Guid syscall.GUID, Opcode uint8) *EventType {
-	return &EventType{
-		Guid:   Guid,
-		Opcode: Opcode,
-	}
+func Pack(g syscall.GUID, op uint8) EType {
+	return EType([17]byte{
+		byte(g.Data1 >> 24), byte(g.Data1 >> 16), byte(g.Data1 >> 8), byte(g.Data1),
+		byte(g.Data2 >> 8), byte(g.Data2), byte(g.Data3 >> 8), byte(g.Data3),
+		g.Data4[0], g.Data4[1], g.Data4[2], g.Data4[3], g.Data4[4], g.Data4[5], g.Data4[6], g.Data4[7],
+		op,
+	})
 }
 
 var (
@@ -149,3 +150,20 @@ var (
 	OpcodeCreateHandle = Pack(ObTraceGuid, 32)
 	OpcodeCloseHandle  = Pack(ObTraceGuid, 33)
 )
+
+func (e EType) String() string {
+	switch e {
+	case OpcodeProcessCreate:
+		return "ProcessCreate"
+		// case OpcodeProcessTerminate:
+		// 	return "ProcessTerminate"
+		// case OpcodeProcessEnumStart:
+		// 	return "ProcessEnumStart"
+		// case OpcodeProcessEnumEnd:
+		// 	return "ProcessEnumEnd"
+		// default:
+		// 	return "undefine"
+	}
+
+	return ""
+}
