@@ -68,7 +68,7 @@ func Parse(etype event.EType, evt *tdh.EventRecord, info *tdh.TraceEventInfo) ma
 			continue
 		}
 
-		fmt.Println(param)
+		params[param.Name] = param.Value
 	}
 
 	return params

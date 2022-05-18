@@ -21,6 +21,7 @@ import (
 	"github.com/mel2oo/win32/types"
 	"github.com/saferun/owl/internal/app/event"
 	"github.com/saferun/owl/internal/app/stream/param"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -54,7 +55,8 @@ func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 		return callbackNext
 	}
 
-	param.Parse(etype, evt, &info)
+	params := param.Parse(etype, evt, &info)
+	logrus.Debug(params)
 
 	return callbackNext
 }
