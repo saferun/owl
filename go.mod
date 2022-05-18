@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/labstack/echo/v4 v4.7.2
-	github.com/mel2oo/win32 v0.0.0-20220517114750-046a0a4261db
+	github.com/mel2oo/win32 v0.0.0-20220518055632-243e19ea1735
 	github.com/urfave/cli/v2 v2.6.0
 )
 

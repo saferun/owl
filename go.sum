@@ -283,6 +283,16 @@ github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27k
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/mel2oo/win32 v0.0.0-20220517114750-046a0a4261db h1:drQuHIiDhdK4GRlpdsZ3fGOzBMzciQ+lb57QmDDcqBI=
 github.com/mel2oo/win32 v0.0.0-20220517114750-046a0a4261db/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220518032805-45946bc95d33 h1:89vfHfp6fmJD0VgM1qXaKysPCBYcxeEViZ0LGc0VT00=
+github.com/mel2oo/win32 v0.0.0-20220518032805-45946bc95d33/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220518052915-b4c17957189f h1:yOgbQX6v2GFHdX0s/PRH3axcFBXG0tzVfyaFBCoeS/c=
+github.com/mel2oo/win32 v0.0.0-20220518052915-b4c17957189f/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220518053900-27b3c7b94a26 h1:9KFsI2LY3R6Yuq6yho43jCYE/bUPm5uKT6l8UDyiE6Q=
+github.com/mel2oo/win32 v0.0.0-20220518053900-27b3c7b94a26/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220518055220-be8a50e32ed2 h1:DRKcu0hQQScOexVKCcBC5K04NNdxNZUqL7fY83NYAUA=
+github.com/mel2oo/win32 v0.0.0-20220518055220-be8a50e32ed2/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
+github.com/mel2oo/win32 v0.0.0-20220518055632-243e19ea1735 h1:PPPOtYjB2sgpGVEaioZm5QTYirtwxGeWHR5xxzucgyE=
+github.com/mel2oo/win32 v0.0.0-20220518055632-243e19ea1735/go.mod h1:DsSaoyhn/tLlzIzRZNK8248j9b+q/ejFQ/tjyVzff2A=
 github.com/miekg/dns v1.1.26/go.mod h1:bPDLeHnStXmXAq1m/Ch/hvfNHr14JKNPMBo3VZKjuso=
 github.com/miekg/dns v1.1.41/go.mod h1:p6aan82bvRIyn+zDIv9xYNUpwa73JcSh9BKwknJysuI=
 github.com/mitchellh/cli v1.1.0/go.mod h1:xcISNoH86gajksDmfB23e/pu+B+GeFRMYmoHXxx3xhI=

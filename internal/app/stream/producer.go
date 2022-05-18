@@ -20,6 +20,7 @@ import (
 	"github.com/mel2oo/win32/tdh"
 	"github.com/mel2oo/win32/types"
 	"github.com/saferun/owl/internal/app/event"
+	"github.com/saferun/owl/internal/app/stream/param"
 )
 
 const (
@@ -45,13 +46,15 @@ func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 		return callbackNext
 	}
 
-	var einfo tdh.TraceEventInfo
+	var info tdh.TraceEventInfo
 	var size types.ULONG = bufferSize
 
-	errno := tdh.TdhGetEventInformation(evt, 0, nil, &einfo, &size)
+	errno := tdh.TdhGetEventInformation(evt, 0, nil, &info, &size)
 	if errno != types.ERROR_SUCCESS {
 		return callbackNext
 	}
+
+	param.Parse(etype, evt, &info)
 
 	return callbackNext
 }
