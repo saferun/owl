@@ -56,7 +56,7 @@ func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 	}
 
 	params := param.Parse(etype, evt, &info)
-	logrus.Debug(params)
+	logrus.Debugf("event:%s, params:%v", etype.String(), params)
 
 	return callbackNext
 }

@@ -3,7 +3,7 @@
 
 [logger]
     # logger level
-    level = "info"
+    level = "debug"
     # log file max size (MB)
     max-size = 100
     # log file save days
