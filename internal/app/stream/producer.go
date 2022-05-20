@@ -15,12 +15,14 @@ package stream
 
 import (
 	"syscall"
+	"unsafe"
 
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
 	"github.com/mel2oo/win32/types"
 	"github.com/saferun/owl/internal/app/event"
-	"github.com/saferun/owl/internal/app/param"
+	"github.com/saferun/owl/internal/config"
+	"github.com/saferun/owl/pkg/etw"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,10 +32,30 @@ const (
 )
 
 type Producer struct {
+	config *config.Config
+	etw    *etw.EventTrace
 }
 
-func NewProducer() *Producer {
-	return &Producer{}
+func NewProducer(c *config.Config) *Producer {
+	return &Producer{config: c}
+}
+
+func (p *Producer) Start() error {
+	p.etw = etw.NewEventTrace(
+		etw.WithProcess(p.config.Etw.Process.Enabled),
+		etw.WithBufferCallback(p.BufferStatsCallback),
+		etw.WithEventCallback(p.ProcessEventCallback),
+	)
+
+	if err := p.etw.Start(); err != nil {
+		return err
+	}
+
+	if err := p.etw.Process(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (p *Producer) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
@@ -41,21 +63,27 @@ func (p *Producer) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
 }
 
 func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
-	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId), evt.EventHeader.EventDescriptor.Opcode)
+
+	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId),
+		evt.EventHeader.EventDescriptor.Opcode)
 
 	if !etype.Exist() {
 		return callbackNext
 	}
 
-	var info tdh.TraceEventInfo
-	var size types.ULONG = bufferSize
+	var (
+		bufferSize types.ULONG = bufferSize
+		buffer                 = make([]byte, bufferSize)
+		info                   = (*tdh.TraceEventInfo)(unsafe.Pointer(&buffer[0]))
+	)
 
-	errno := tdh.TdhGetEventInformation(evt, 0, nil, &info, &size)
+	errno := tdh.TdhGetEventInformation(evt, 0, nil, info, &bufferSize)
 	if errno != types.ERROR_SUCCESS {
 		return callbackNext
 	}
 
-	params := param.Parse(etype, evt, &info)
+	params := event.Parse(etype, evt, info)
+
 	logrus.Debugf("event:%s, params:%v", etype.String(), params)
 
 	return callbackNext

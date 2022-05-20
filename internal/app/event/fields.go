@@ -11,7 +11,120 @@
  * with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-package param
+package event
+
+import (
+	"errors"
+	"fmt"
+	"unsafe"
+
+	"github.com/mel2oo/win32/tdh"
+	"github.com/mel2oo/win32/types"
+	"github.com/saferun/owl/pkg/utf16"
+)
+
+type Param struct {
+	Name  string
+	Type  Type
+	Value Value
+}
+
+func getParam(name string, buffer []types.BYTE, size types.ULONG, nonStructType tdh.StructType) (*Param, error) {
+	if len(buffer) == 0 {
+		return nil, errors.New("property buffer is empty")
+	}
+
+	var (
+		typ Type
+		val Value
+	)
+
+	switch nonStructType.InType {
+	case tdh.TdhIntypeUnicodestring:
+		typ, val = UnicodeString, utf16.PtrToString(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeAnsiString:
+		typ, val = AnsiString, string((*[1<<30 - 1]byte)(unsafe.Pointer(&buffer[0]))[:size-1:size-1])
+
+	case tdh.TdhIntypeInt8:
+		typ, val = Int8, *(*int8)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeUint8:
+		typ, val = Uint8, *(*uint8)(unsafe.Pointer(&buffer[0]))
+		if nonStructType.OutType == tdh.TdhOutypeHexInt8 {
+			typ = HexInt8
+		}
+
+	case tdh.TdhIntypeBoolean:
+		typ, val = Bool, *(*bool)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeInt16:
+		typ, val = Int16, *(*int16)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeUint16:
+		typ, val = Uint16, *(*uint16)(unsafe.Pointer(&buffer[0]))
+		switch nonStructType.OutType {
+		case tdh.TdhOutypeHexInt16:
+			typ = HexInt16
+		case tdh.TdhOutypePort:
+			typ = Port
+		}
+
+	case tdh.TdhIntypeInt32:
+		typ, val = Int32, *(*int32)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeUint32:
+		typ, val = Uint32, *(*uint32)(unsafe.Pointer(&buffer[0]))
+		switch nonStructType.OutType {
+		case tdh.TdhOutypeHexInt32:
+			typ = HexInt32
+		case tdh.TdhOutypeIpv4:
+			typ = IPv4
+		}
+
+	case tdh.TdhIntypeInt64:
+		typ, val = Int64, *(*int64)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeUint64:
+		typ, val = Uint64, *(*uint64)(unsafe.Pointer(&buffer[0]))
+		if nonStructType.OutType == tdh.TdhOutypeHexInt64 {
+			typ = HexInt64
+		}
+
+	case tdh.TdhIntypeFloat:
+		typ, val = Float, *(*float32)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeDouble:
+		typ, val = Double, *(*float64)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeHexInt32:
+		typ, val = HexInt32, *(*int32)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeHexInt64:
+		typ, val = HexInt64, *(*int64)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypePointer, tdh.TdhIntypeSizet:
+		typ, val = HexInt64, *(*uint64)(unsafe.Pointer(&buffer[0]))
+
+	case tdh.TdhIntypeSid:
+		typ, val = SID, buffer
+
+	case tdh.TdhIntypeWbemSid:
+		typ, val = WbemSID, buffer
+
+	case tdh.TdhIntypeBinary:
+		if nonStructType.OutType == tdh.TdhOutypeIpv6 {
+			typ, val = IPv6, buffer
+		} else {
+			typ, val = Binary, buffer
+		}
+
+	default:
+		return nil, fmt.Errorf("unknown type for %q parameter", name)
+	}
+
+	return &Param{name, typ, val}, nil
+}
 
 const (
 	// NTStatus is the parameter that identifies the NTSTATUS value.
@@ -20,7 +133,7 @@ const (
 	// ProcessID represents the process identifier.
 	ProcessID = "pid"
 	// ProcessObject field represents the address of the process object in the kernel.
-	ProcessObject = "kproc"
+	ProcessObject = "proc"
 	// ThreadID field represents the thread identifier.
 	ThreadID = "tid"
 	// ProcessParentID field represents the parent process identifier.
@@ -34,7 +147,7 @@ const (
 	// Exe field denotes the full path of the executable.
 	Exe = "exe"
 	// Comm field represents the process command line.
-	Comm = "comm"
+	Comm = "command"
 	// DTB field denotes the address of the process directory table.
 	DTB = "directory_table_base"
 	// ExitStatus is the field that represents the process exit status.
@@ -164,3 +277,23 @@ const (
 	// HandleObjectTypeName identifies the parameter that represents the kernel object type name.
 	HandleObjectTypeName = "handle_type"
 )
+
+func SizeOf(field string) uint32 {
+	switch field {
+	case RegKeyHandle, KstackLimit, KstackBase, UstackLimit,
+		UstackBase, ThreadEntrypoint, ImageBase, ImageSize,
+		ImageDefaultBase, DTB, ProcessObject, FileIrpPtr, FileObject,
+		FileExtraInfo, HandleObject, FileKey, FileOffset:
+		return 8
+	case NTStatus, ProcessID, ThreadID, ProcessParentID,
+		SessionID, ExitStatus, FileCreateOptions, FileShareMask,
+		HandleID, FileIoSize, FileInfoClass:
+		return 4
+	case NetDport, NetSport, HandleObjectTypeID:
+		return 2
+	case PagePrio, BasePrio, IOPrio:
+		return 1
+	default:
+		return 0
+	}
+}

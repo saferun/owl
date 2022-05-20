@@ -89,8 +89,7 @@ var (
 
 	OpcodeProcessCreate    = Pack(ProcessGuid, 1)
 	OpcodeProcessTerminate = Pack(ProcessGuid, 2)
-	OpcodeProcessEnumStart = Pack(ProcessGuid, 3)
-	OpcodeProcessEnumEnd   = Pack(ProcessGuid, 4)
+	// OpcodeProcessEnum      = Pack(ProcessGuid, 3)
 
 	OpcodeThreadCreate    = Pack(ThreadGuid, 1)
 	OpcodeThreadTerminate = Pack(ThreadGuid, 2)
@@ -157,12 +156,6 @@ func (e EType) String() string {
 		return "ProcessCreate"
 	case OpcodeProcessTerminate:
 		return "ProcessTerminate"
-		// case OpcodeProcessEnumStart:
-		// 	return "ProcessEnumStart"
-		// case OpcodeProcessEnumEnd:
-		// 	return "ProcessEnumEnd"
-		// default:
-		// 	return "undefine"
 	}
 
 	return ""

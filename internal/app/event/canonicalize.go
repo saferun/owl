@@ -11,7 +11,7 @@
  * with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-package param
+package event
 
 const (
 	uniqueProcessKey = "UniqueProcessKey"

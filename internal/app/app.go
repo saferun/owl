@@ -16,35 +16,23 @@ package app
 import (
 	"github.com/saferun/owl/internal/app/stream"
 	"github.com/saferun/owl/internal/config"
-	"github.com/saferun/owl/pkg/etw"
 )
 
 type Controller struct {
-	config   *config.Config
 	producer *stream.Producer
 	consumer *stream.Consumer
-	etw      *etw.EventTrace
 }
 
 func NewController(config *config.Config) *Controller {
-	c := &Controller{config: config}
-	c.producer = stream.NewProducer()
+	c := &Controller{}
+	c.producer = stream.NewProducer(config)
 	c.consumer = stream.NewConsumer()
-	c.etw = etw.NewEventTrace(
-		etw.WithProcess(config.Etw.Process.Enabled),
-		etw.WithBufferCallback(c.producer.BufferStatsCallback),
-		etw.WithEventCallback(c.producer.ProcessEventCallback),
-	)
 
 	return c
 }
 
 func (c *Controller) Start() error {
-	if err := c.etw.Start(); err != nil {
-		return err
-	}
-
-	if err := c.etw.Process(); err != nil {
+	if err := c.producer.Start(); err != nil {
 		return err
 	}
 
