@@ -20,7 +20,7 @@ import (
 	"github.com/mel2oo/win32/tdh"
 	"github.com/mel2oo/win32/types"
 	"github.com/saferun/owl/internal/app/event"
-	"github.com/saferun/owl/internal/app/stream/param"
+	"github.com/saferun/owl/internal/app/param"
 	"github.com/sirupsen/logrus"
 )
 

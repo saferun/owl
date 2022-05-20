@@ -155,8 +155,8 @@ func (e EType) String() string {
 	switch e {
 	case OpcodeProcessCreate:
 		return "ProcessCreate"
-		// case OpcodeProcessTerminate:
-		// 	return "ProcessTerminate"
+	case OpcodeProcessTerminate:
+		return "ProcessTerminate"
 		// case OpcodeProcessEnumStart:
 		// 	return "ProcessEnumStart"
 		// case OpcodeProcessEnumEnd:
