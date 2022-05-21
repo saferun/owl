@@ -31,27 +31,30 @@ type Server struct {
 
 type ETW struct {
 	Process struct {
-		Enabled bool `mapstructure:"enable"`
+		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"process"`
 	Thread struct {
-		Enabled bool `mapstructure:"enable"`
+		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"thread"`
 	Image struct {
-		Enabled bool `mapstructure:"enable"`
+		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"image"`
-	TcpIP struct {
-		Enabled bool `mapstructure:"enable"`
-	} `mapstructure:"tcpip"`
-	Reg struct {
-		Enabled bool `mapstructure:"enable"`
+	File struct {
+		Enabled bool `mapstructure:"enabled"`
+	} `mapstructure:"file"`
+	Registry struct {
+		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"registry"`
+	TcpIP struct {
+		Enabled bool `mapstructure:"enabled"`
+	} `mapstructure:"tcpip"`
 	DiskIO struct {
-		Enabled bool `mapstructure:"enable"`
+		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"diskio"`
 }
 
 type Yara struct {
-	Enabled bool     `mapstructure:"enable"`
+	Enabled bool     `mapstructure:"enabled"`
 	Rules   []string `mapstructure:"rules"`
 }
 

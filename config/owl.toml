@@ -18,27 +18,31 @@
 [etw]
     # if enabled, etw will trace process event
     [etw.process]
-        enabled = true
+        enabled = false
     
     # if enabled, etw will trace thread event
     [etw.thread]
-        enabled = true
+        enabled = false
 
     # if enabled, etw will trace imageload event
     [etw.image]
-        enabled = true
+        enabled = false
 
-    # if enabled, etw will trace tcp/ip event
-    [etw.tcpip]
+    # if enabled, etw will trace registry event
+    [etw.file]
         enabled = true
 
     # if enabled, etw will trace registry event
     [etw.registry]
-        enabled = true
+        enabled = false
+
+    # if enabled, etw will trace tcp/ip event
+    [etw.tcpip]
+        enabled = false
     
     # if enabled, etw will trace diskfileio/fileio/fileioinit event
     [etw.diskio]
-        enabled = true
+        enabled = false
 
 [yara]
     # if enabled, when process start will scan process memory

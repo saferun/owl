@@ -104,7 +104,7 @@ func (hook *File) Levels() []logrus.Level {
 
 // Fire is called by logrus when it is about to write the log entry.
 func (hook *File) Fire(entry *logrus.Entry) (err error) {
-	entry.Data["app"] = hook.app
+	// entry.Data["app"] = hook.app
 	entry.Data["file"] = findCaller()
 	b, err := hook.formatter.Format(entry)
 	if err != nil {

@@ -24,11 +24,10 @@ type Controller struct {
 }
 
 func NewController(config *config.Config) *Controller {
-	c := &Controller{}
-	c.producer = stream.NewProducer(config)
-	c.consumer = stream.NewConsumer()
-
-	return c
+	return &Controller{
+		producer: stream.NewProducer(config),
+		consumer: stream.NewConsumer(),
+	}
 }
 
 func (c *Controller) Start() error {

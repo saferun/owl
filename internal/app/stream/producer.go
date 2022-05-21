@@ -43,6 +43,12 @@ func NewProducer(c *config.Config) *Producer {
 func (p *Producer) Start() error {
 	p.etw = etw.NewEventTrace(
 		etw.WithProcess(p.config.Etw.Process.Enabled),
+		etw.WithThread(p.config.Etw.Thread.Enabled),
+		etw.WithImage(p.config.Etw.Image.Enabled),
+		etw.WithFile(p.config.Etw.File.Enabled),
+		etw.WithRegistry(p.config.Etw.Registry.Enabled),
+		etw.WithTcpIP(p.config.Etw.TcpIP.Enabled),
+		etw.WithDiskIO(p.config.Etw.DiskIO.Enabled),
 		etw.WithBufferCallback(p.BufferStatsCallback),
 		etw.WithEventCallback(p.ProcessEventCallback),
 	)
@@ -67,7 +73,7 @@ func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId),
 		evt.EventHeader.EventDescriptor.Opcode)
 
-	if !etype.Exist() {
+	if !etype.Exist() || etype.Dropped() {
 		return callbackNext
 	}
 

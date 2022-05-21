@@ -16,6 +16,7 @@ package etw
 import (
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
+	"github.com/sirupsen/logrus"
 )
 
 type option func(*options)
@@ -27,13 +28,13 @@ type options struct {
 }
 
 func newopts() *options {
-	return &options{
-		flags: evntrace.EventTraceFlagProcess,
-	}
+	return &options{}
 }
 
 func WithProcess(enabled bool) option {
 	return func(o *options) {
+		logrus.Infof("set process event flag: %v", enabled)
+
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagProcess
 		}
@@ -42,32 +43,51 @@ func WithProcess(enabled bool) option {
 
 func WithThread(enabled bool) option {
 	return func(o *options) {
+		logrus.Infof("set thread event flag: %v", enabled)
+
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagThread
 		}
 	}
 }
 
-func WithImageLoad(enabled bool) option {
+func WithImage(enabled bool) option {
 	return func(o *options) {
+		logrus.Infof("set image event flag: %v", enabled)
+
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagImageLoad
 		}
 	}
 }
 
-func WithTcpIP(enabled bool) option {
+func WithFile(enabled bool) option {
 	return func(o *options) {
+		logrus.Infof("set file event flag: %v", enabled)
+
 		if enabled {
-			o.flags |= evntrace.EventTraceFlagNetworkTCPIP
+			o.flags |= evntrace.EventTraceFlagFileIO
+			o.flags |= evntrace.EventTraceFlagFileIOInit
 		}
 	}
 }
 
 func WithRegistry(enabled bool) option {
 	return func(o *options) {
+		logrus.Infof("set registry event flag: %v", enabled)
+
 		if enabled {
 			o.flags |= evntrace.EventTraceFlagRegistry
+		}
+	}
+}
+
+func WithTcpIP(enabled bool) option {
+	return func(o *options) {
+		logrus.Infof("set tcp/ip event flag: %v", enabled)
+
+		if enabled {
+			o.flags |= evntrace.EventTraceFlagNetworkTCPIP
 		}
 	}
 }
