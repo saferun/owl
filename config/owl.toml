@@ -30,11 +30,11 @@
 
     # if enabled, etw will trace registry event
     [etw.file]
-        enabled = true
+        enabled = false
 
     # if enabled, etw will trace registry event
     [etw.registry]
-        enabled = false
+        enabled = true
 
     # if enabled, etw will trace tcp/ip event
     [etw.tcpip]

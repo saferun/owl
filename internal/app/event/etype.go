@@ -29,10 +29,11 @@ func Pack(g syscall.GUID, op uint8) EType {
 }
 
 var (
-	ProcessGuid = syscall.GUID{Data1: 0x3d6fa8d0, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
-	ThreadGuid  = syscall.GUID{Data1: 0x3d6fa8d1, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
-	ImageGuid   = syscall.GUID{Data1: 0x2cb15d1d, Data2: 0x5fc1, Data3: 0x11d2, Data4: [8]byte{0xab, 0xe1, 0x00, 0xa0, 0xc9, 0x11, 0xf5, 0x18}}
-	FileIOGuid  = syscall.GUID{Data1: 0x90cbdc39, Data2: 0x4a3e, Data3: 0x11d1, Data4: [8]byte{0x84, 0xf4, 0x00, 0x00, 0xf8, 0x04, 0x64, 0xe3}}
+	ProcessGuid  = syscall.GUID{Data1: 0x3d6fa8d0, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
+	ThreadGuid   = syscall.GUID{Data1: 0x3d6fa8d1, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
+	ImageGuid    = syscall.GUID{Data1: 0x2cb15d1d, Data2: 0x5fc1, Data3: 0x11d2, Data4: [8]byte{0xab, 0xe1, 0x00, 0xa0, 0xc9, 0x11, 0xf5, 0x18}}
+	FileIOGuid   = syscall.GUID{Data1: 0x90cbdc39, Data2: 0x4a3e, Data3: 0x11d1, Data4: [8]byte{0x84, 0xf4, 0x00, 0x00, 0xf8, 0x04, 0x64, 0xe3}}
+	RegistryGuid = syscall.GUID{Data1: 0xae53722e, Data2: 0xc863, Data3: 0x11d2, Data4: [8]byte{0x86, 0x59, 0x0, 0xc0, 0x4f, 0xa3, 0x21, 0xa1}}
 
 	ALPCGuid             = syscall.GUID{Data1: 0x45d8cccd, Data2: 0x539f, Data3: 0x4b72, Data4: [8]byte{0xa8, 0xb7, 0x5c, 0x68, 0x31, 0x42, 0x60, 0x9a}}
 	DiskIoGuid           = syscall.GUID{Data1: 0x3d6fa8d4, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
@@ -40,7 +41,6 @@ var (
 	ObTraceGuid          = syscall.GUID{Data1: 0x89497f50, Data2: 0xeffe, Data3: 0x4440, Data4: [8]byte{0x8c, 0xf2, 0xce, 0x6b, 0x1c, 0xdc, 0xac, 0xa7}}
 	PageFaultGuid        = syscall.GUID{Data1: 0x3d6fa8d3, Data2: 0xfe05, Data3: 0x11d0, Data4: [8]byte{0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c}}
 	PerfInfoGuid         = syscall.GUID{Data1: 0xce1dbfb4, Data2: 0x137e, Data3: 0x4da6, Data4: [8]byte{0x87, 0xb0, 0x3f, 0x59, 0xaa, 0x10, 0x2c, 0xbc}}
-	RegistryGuid         = syscall.GUID{Data1: 0xae53722e, Data2: 0xc863, Data3: 0x11d2, Data4: [8]byte{0x86, 0x59, 0x0, 0xc0, 0x4f, 0xa3, 0x21, 0xa1}}
 	SplitIoGuid          = syscall.GUID{Data1: 0xd837ca92, Data2: 0x12b9, Data3: 0x44a5, Data4: [8]byte{0xad, 0x6a, 0x3a, 0x65, 0xb3, 0x57, 0x8a, 0xa8}}
 	TcpIpGuid            = syscall.GUID{Data1: 0x9a280ac0, Data2: 0xc8e0, Data3: 0x11d1, Data4: [8]byte{0x84, 0xe2, 0x00, 0xc0, 0x4f, 0xb9, 0x98, 0xa2}}
 	UdpIpGuid            = syscall.GUID{Data1: 0xbf3a50c5, Data2: 0xa9c9, Data3: 0x4988, Data4: [8]byte{0xa0, 0x05, 0x2d, 0xf0, 0xb7, 0xc8, 0x0f, 0x80}}
@@ -61,21 +61,39 @@ var (
 	OpImageLoad   = Pack(ImageGuid, 10)
 
 	// file Event
-	OpFileCreate  = Pack(FileIOGuid, 64)
-	OpFileCleanup = Pack(FileIOGuid, 65)
-	OpFileDelete  = Pack(FileIOGuid, 70)
-
-	OpClose         = Pack(FileIOGuid, 66)
-	OpReadFile      = Pack(FileIOGuid, 67)
-	OpWriteFile     = Pack(FileIOGuid, 68)
+	OpFileCreate    = Pack(FileIOGuid, 64)
+	OpFileCleanup   = Pack(FileIOGuid, 65)
+	OpFileClose     = Pack(FileIOGuid, 66)
+	OpFileRead      = Pack(FileIOGuid, 67)
+	OpFileWrite     = Pack(FileIOGuid, 68)
 	OpSetFileInfo   = Pack(FileIOGuid, 69)
-	OpRenameFile    = Pack(FileIOGuid, 71)
-	OpEnumDir       = Pack(FileIOGuid, 72)
-	OpFlush         = Pack(FileIOGuid, 73)
+	OpFileDelete    = Pack(FileIOGuid, 70)
+	OpFileRename    = Pack(FileIOGuid, 71)
+	OpEnumDirectory = Pack(FileIOGuid, 72)
+	OpFileFlush     = Pack(FileIOGuid, 73)
 	OpQueryFileInfo = Pack(FileIOGuid, 74)
 	OpFSControl     = Pack(FileIOGuid, 75)
-	OpOpEnd         = Pack(FileIOGuid, 76)
-	OpNotifyDir     = Pack(FileIOGuid, 77)
+	OpFileOpEnd     = Pack(FileIOGuid, 76)
+	// OpNotifyDirectory = Pack(FileIOGuid, 77)
+
+	// Registry
+	OpRegCreateKey      = Pack(RegistryGuid, 10)
+	OpRegOpenKey        = Pack(RegistryGuid, 11)
+	OpRegDeleteKey      = Pack(RegistryGuid, 12)
+	OpRegQueryKey       = Pack(RegistryGuid, 13)
+	OpRegSetValue       = Pack(RegistryGuid, 14)
+	OpRegDeleteValue    = Pack(RegistryGuid, 15)
+	OpRegQueryValue     = Pack(RegistryGuid, 16)
+	OpRegEnumKey        = Pack(RegistryGuid, 17)
+	OpRegEnumValueKey   = Pack(RegistryGuid, 18)
+	OpRegSetInformation = Pack(RegistryGuid, 20)
+	OpRegCreateKCB      = Pack(RegistryGuid, 22)
+	OpRegDeleteKCB      = Pack(RegistryGuid, 23)
+	OpRegKCBRundown     = Pack(RegistryGuid, 25)
+	OpRegOpenKeyV1      = Pack(RegistryGuid, 27)
+
+	// OpRegQueryMultValue = Pack(RegistryGuid, 19)
+	// OpRegFlush          = Pack(RegistryGuid, 21)
 
 	OpALPCSendMessage       = Pack(ALPCGuid, 33)
 	OpALPCReceiveMessage    = Pack(ALPCGuid, 34)
@@ -95,24 +113,6 @@ var (
 	OpDriverCompletionRoutine     = Pack(DiskIoGuid, 37)
 	OpDriverCompleteRequest       = Pack(DiskIoGuid, 52)
 	OpDriverCompleteRequestReturn = Pack(DiskIoGuid, 53)
-
-	OpRegCreateKey        = Pack(RegistryGuid, 10)
-	OpRegOpenKey          = Pack(RegistryGuid, 11)
-	OpRegDeleteKey        = Pack(RegistryGuid, 12)
-	OpRegQueryKey         = Pack(RegistryGuid, 13)
-	OpRegSetValue         = Pack(RegistryGuid, 14)
-	OpRegDeleteValue      = Pack(RegistryGuid, 15)
-	OpRegQueryValue       = Pack(RegistryGuid, 16)
-	OpRegEnumKey          = Pack(RegistryGuid, 17)
-	OpRegEnumValueKey     = Pack(RegistryGuid, 18)
-	OpRegQueryMultValue   = Pack(RegistryGuid, 19)
-	OpRegSetInformation   = Pack(RegistryGuid, 20)
-	OpRegFlush            = Pack(RegistryGuid, 21)
-	OpRegCreateKCB        = Pack(RegistryGuid, 22)
-	OpRegDeleteKCB        = Pack(RegistryGuid, 23)
-	OpRegKCBRundownBegine = Pack(RegistryGuid, 24)
-	OpRegKCBRundownEnd    = Pack(RegistryGuid, 25)
-	OpRegOpenKeyV1        = Pack(RegistryGuid, 27)
 
 	OpSendTCPv4       = Pack(TcpIpGuid, 10)
 	OpRecvTCPv4       = Pack(TcpIpGuid, 11)
@@ -177,8 +177,56 @@ func (e EType) String() string {
 		return "FileCreate"
 	case OpFileCleanup:
 		return "FileCleanup"
+	case OpFileClose:
+		return "FileClose"
+	case OpFileRead:
+		return "FileRead"
+	case OpFileWrite:
+		return "FileWrite"
+	case OpSetFileInfo:
+		return "SetFileInfo"
 	case OpFileDelete:
 		return "FileDelete"
+	case OpFileRename:
+		return "FileRename"
+	case OpEnumDirectory:
+		return "EnumDirectory"
+	case OpFileFlush:
+		return "FileFlush"
+	case OpQueryFileInfo:
+		return "QueryFileInfo"
+	case OpFSControl:
+		return "FSControl"
+	case OpFileOpEnd:
+		return "OpFileOpEnd"
+
+	case OpRegCreateKey:
+		return "RegCreateKey"
+	case OpRegOpenKey, OpRegOpenKeyV1:
+		return "RegOpenKey"
+	case OpRegDeleteKey:
+		return "RegDeleteKey"
+	case OpRegQueryKey:
+		return "RegQueryKey"
+	case OpRegSetValue:
+		return "RegSetValue"
+	case OpRegDeleteValue:
+		return "RegDeleteValue"
+	case OpRegQueryValue:
+		return "RegQueryValue"
+	case OpRegEnumKey:
+		return "RegEnumKey"
+	case OpRegEnumValueKey:
+		return "RegEnumValueKey"
+	case OpRegSetInformation:
+		return "RegSetInformation"
+	case OpRegCreateKCB:
+		return "RegCreateKCB"
+	case OpRegDeleteKCB:
+		return "RegDeleteKCB"
+	case OpRegKCBRundown:
+		return "RegKCBRundown"
+
 	}
 
 	return ""
@@ -192,9 +240,16 @@ func (e EType) Exist() bool {
 		return true
 	case OpImageUnload, OpImageEnum, OpImageLoad:
 		return true
-	// case OpFileDelete, OpFileDelete:
-	case OpFileCleanup:
+	case OpFileCreate, OpFileCleanup, OpFileClose, OpFileRead, OpFileWrite,
+		OpSetFileInfo, OpFileDelete, OpFileRename, OpEnumDirectory, OpFileFlush,
+		OpQueryFileInfo, OpFSControl, OpFileOpEnd:
 		return true
+	case OpRegCreateKey, OpRegOpenKey, OpRegDeleteKey, OpRegQueryKey,
+		OpRegSetValue, OpRegDeleteValue, OpRegQueryValue, OpRegEnumKey,
+		OpRegEnumValueKey, OpRegSetInformation, OpRegCreateKCB, OpRegDeleteKCB,
+		OpRegKCBRundown, OpRegOpenKeyV1:
+		return true
+
 	default:
 		return false
 	}
