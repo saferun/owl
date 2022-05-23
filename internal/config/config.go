@@ -45,9 +45,9 @@ type ETW struct {
 	Registry struct {
 		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"registry"`
-	TcpIP struct {
+	Network struct {
 		Enabled bool `mapstructure:"enabled"`
-	} `mapstructure:"tcpip"`
+	} `mapstructure:"network"`
 	DiskIO struct {
 		Enabled bool `mapstructure:"enabled"`
 	} `mapstructure:"diskio"`

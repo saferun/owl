@@ -47,7 +47,7 @@ func (p *Producer) Start() error {
 		etw.WithImage(p.config.Etw.Image.Enabled),
 		etw.WithFile(p.config.Etw.File.Enabled),
 		etw.WithRegistry(p.config.Etw.Registry.Enabled),
-		etw.WithTcpIP(p.config.Etw.TcpIP.Enabled),
+		etw.WithTcpIP(p.config.Etw.Network.Enabled),
 		etw.WithDiskIO(p.config.Etw.DiskIO.Enabled),
 		etw.WithBufferCallback(p.BufferStatsCallback),
 		etw.WithEventCallback(p.ProcessEventCallback),

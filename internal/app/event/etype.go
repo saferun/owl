@@ -91,9 +91,37 @@ var (
 	OpRegDeleteKCB      = Pack(RegistryGuid, 23)
 	OpRegKCBRundown     = Pack(RegistryGuid, 25)
 	OpRegOpenKeyV1      = Pack(RegistryGuid, 27)
-
 	// OpRegQueryMultValue = Pack(RegistryGuid, 19)
 	// OpRegFlush          = Pack(RegistryGuid, 21)
+
+	// network/tcp
+	OpSendTCPv4       = Pack(TcpIpGuid, 10)
+	OpRecvTCPv4       = Pack(TcpIpGuid, 11)
+	OpConnectTCPv4    = Pack(TcpIpGuid, 12)
+	OpDisconnectTCPv4 = Pack(TcpIpGuid, 13)
+	OpAcceptTCPv4     = Pack(TcpIpGuid, 15)
+	OpReconnectTCPv4  = Pack(TcpIpGuid, 16)
+	OpSendTCPv6       = Pack(TcpIpGuid, 26)
+	OpRecvTCPv6       = Pack(TcpIpGuid, 27)
+	OpConnectTCPv6    = Pack(TcpIpGuid, 28)
+	OpDisconnectTCPv6 = Pack(TcpIpGuid, 29)
+	OpAcceptTCPv6     = Pack(TcpIpGuid, 31)
+	OpReconnectTCPv6  = Pack(TcpIpGuid, 32)
+	// OpRetransmitTCPv4 = Pack(TcpIpGuid, 14)
+	// OpRetransmitTCPv6 = Pack(TcpIpGuid, 30)
+	// OpCopyTCPv4       = Pack(TcpIpGuid, 18)
+	// OpCopyTCPv6       = Pack(TcpIpGuid, 34)
+	// OpTCPFail         = Pack(TcpIpGuid, 17)
+
+	// network/udp
+	OpSendUDPv4 = Pack(UdpIpGuid, 10)
+	OpRecvUDPV4 = Pack(UdpIpGuid, 11)
+	OpSendUDPv6 = Pack(UdpIpGuid, 26)
+	OpRecvUDPV6 = Pack(UdpIpGuid, 27)
+	// 	OpUDPFail   = Pack(UdpIpGuid, 17)
+
+	OpCreateHandle = Pack(ObTraceGuid, 32)
+	OpCloseHandle  = Pack(ObTraceGuid, 33)
 
 	OpALPCSendMessage       = Pack(ALPCGuid, 33)
 	OpALPCReceiveMessage    = Pack(ALPCGuid, 34)
@@ -113,41 +141,6 @@ var (
 	OpDriverCompletionRoutine     = Pack(DiskIoGuid, 37)
 	OpDriverCompleteRequest       = Pack(DiskIoGuid, 52)
 	OpDriverCompleteRequestReturn = Pack(DiskIoGuid, 53)
-
-	OpSendTCPv4       = Pack(TcpIpGuid, 10)
-	OpRecvTCPv4       = Pack(TcpIpGuid, 11)
-	OpConnectTCPv4    = Pack(TcpIpGuid, 12)
-	OpDisconnectTCPv4 = Pack(TcpIpGuid, 13)
-	OpRetransmitTCPv4 = Pack(TcpIpGuid, 14)
-	OpAcceptTCPv4     = Pack(TcpIpGuid, 15)
-	OpReconnectTCPv4  = Pack(TcpIpGuid, 16)
-	OpTCPFail         = Pack(TcpIpGuid, 17)
-	OpCopyTCPv4       = Pack(TcpIpGuid, 18)
-	OpSendTCPv6       = Pack(TcpIpGuid, 26)
-	OpRecvTCPv6       = Pack(TcpIpGuid, 27)
-	OpConnectTCPv6    = Pack(TcpIpGuid, 28)
-	OpDisconnectTCPv6 = Pack(TcpIpGuid, 29)
-	OpRetransmitTCPv6 = Pack(TcpIpGuid, 30)
-	OpAcceptTCPv6     = Pack(TcpIpGuid, 31)
-	OpReconnectTCPv6  = Pack(TcpIpGuid, 32)
-	OpCopyTCPv6       = Pack(TcpIpGuid, 34)
-
-	OpSendUDPv4 = Pack(UdpIpGuid, 10)
-	OpRecvUDPV4 = Pack(UdpIpGuid, 11)
-	OpUDPFail   = Pack(UdpIpGuid, 17)
-	OpSendUDPv6 = Pack(UdpIpGuid, 26)
-	OpRecvUDPV6 = Pack(UdpIpGuid, 27)
-
-	OpConnect    = Pack(TcpIpGuid, 40)
-	OpDisconnect = Pack(TcpIpGuid, 42)
-	OpRetransmit = Pack(TcpIpGuid, 44)
-	OpAccept     = Pack(TcpIpGuid, 46)
-	OpReconnect  = Pack(TcpIpGuid, 47)
-	OpSend       = Pack(TcpIpGuid, 72)
-	OpRecv       = Pack(UdpIpGuid, 75)
-
-	OpCreateHandle = Pack(ObTraceGuid, 32)
-	OpCloseHandle  = Pack(ObTraceGuid, 33)
 )
 
 func (e EType) String() string {
@@ -227,6 +220,19 @@ func (e EType) String() string {
 	case OpRegKCBRundown:
 		return "RegKCBRundown"
 
+	case OpSendTCPv4, OpSendTCPv6, OpSendUDPv4, OpSendUDPv6:
+		return "Send"
+	case OpRecvTCPv4, OpRecvTCPv6, OpRecvUDPV4, OpRecvUDPV6:
+		return "Recv"
+	case OpConnectTCPv4, OpConnectTCPv6:
+		return "Connect"
+	case OpDisconnectTCPv4, OpDisconnectTCPv6:
+		return "Disconnect"
+	case OpAcceptTCPv4, OpAcceptTCPv6:
+		return "Accept"
+	case OpReconnectTCPv4, OpReconnectTCPv6:
+		return "Reconnect"
+
 	}
 
 	return ""
@@ -248,6 +254,9 @@ func (e EType) Exist() bool {
 		OpRegSetValue, OpRegDeleteValue, OpRegQueryValue, OpRegEnumKey,
 		OpRegEnumValueKey, OpRegSetInformation, OpRegCreateKCB, OpRegDeleteKCB,
 		OpRegKCBRundown, OpRegOpenKeyV1:
+		return true
+	case OpSendTCPv4, OpRecvTCPv4, OpConnectTCPv4, OpDisconnectTCPv4, OpAcceptTCPv4, OpReconnectTCPv4,
+		OpSendTCPv6, OpRecvTCPv6, OpConnectTCPv6, OpDisconnectTCPv6, OpAcceptTCPv6, OpReconnectTCPv6:
 		return true
 
 	default:

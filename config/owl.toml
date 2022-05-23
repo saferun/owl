@@ -34,11 +34,11 @@
 
     # if enabled, etw will trace registry event
     [etw.registry]
-        enabled = true
+        enabled = false
 
     # if enabled, etw will trace tcp/ip event
-    [etw.tcpip]
-        enabled = false
+    [etw.network]
+        enabled = true
     
     # if enabled, etw will trace diskfileio/fileio/fileioinit event
     [etw.diskio]
