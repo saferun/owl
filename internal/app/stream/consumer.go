@@ -13,9 +13,42 @@
 
 package stream
 
+import (
+	"fmt"
+
+	"github.com/saferun/owl/internal/app/event"
+)
+
 type Consumer struct {
+	Queue chan *Event
+	Quit  chan struct{}
 }
 
 func NewConsumer() *Consumer {
-	return &Consumer{}
+	return &Consumer{
+		Queue: make(chan *Event, 1000),
+		Quit:  make(chan struct{}),
+	}
+}
+
+type Event struct {
+	EType  event.EType
+	Params []event.Param
+}
+
+func (c *Consumer) Run() error {
+
+	go func() {
+		for {
+			select {
+			case evt := <-c.Queue:
+				fmt.Println(evt.EType.String(), evt.Params)
+
+			case <-c.Quit:
+				return
+			}
+		}
+	}()
+
+	return nil
 }

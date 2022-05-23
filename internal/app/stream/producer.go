@@ -23,7 +23,6 @@ import (
 	"github.com/saferun/owl/internal/app/event"
 	"github.com/saferun/owl/internal/config"
 	"github.com/saferun/owl/pkg/etw"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -34,10 +33,15 @@ const (
 type Producer struct {
 	config *config.Config
 	etw    *etw.EventTrace
+
+	consumer *Consumer
 }
 
-func NewProducer(c *config.Config) *Producer {
-	return &Producer{config: c}
+func NewProducer(config *config.Config, consumer *Consumer) *Producer {
+	return &Producer{
+		config:   config,
+		consumer: consumer,
+	}
 }
 
 func (p *Producer) Start() error {
@@ -88,9 +92,10 @@ func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 		return callbackNext
 	}
 
-	params := event.Parse(etype, evt, info)
-
-	logrus.Debugf("event:%s, params:%v", etype.String(), params)
+	p.consumer.Queue <- &Event{
+		EType:  etype,
+		Params: event.Parse(etype, evt, info),
+	}
 
 	return callbackNext
 }

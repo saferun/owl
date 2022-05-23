@@ -16,21 +16,30 @@ package app
 import (
 	"github.com/saferun/owl/internal/app/stream"
 	"github.com/saferun/owl/internal/config"
+	"github.com/sirupsen/logrus"
 )
 
 type Controller struct {
-	producer *stream.Producer
 	consumer *stream.Consumer
+	producer *stream.Producer
 }
 
 func NewController(config *config.Config) *Controller {
+	consumer := stream.NewConsumer()
+	producer := stream.NewProducer(config, consumer)
 	return &Controller{
-		producer: stream.NewProducer(config),
-		consumer: stream.NewConsumer(),
+		consumer: consumer,
+		producer: producer,
 	}
 }
 
 func (c *Controller) Start() error {
+	logrus.Info("consumer run")
+	if err := c.consumer.Run(); err != nil {
+		return err
+	}
+
+	logrus.Info("producer start")
 	if err := c.producer.Start(); err != nil {
 		return err
 	}

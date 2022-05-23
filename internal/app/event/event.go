@@ -21,10 +21,10 @@ import (
 	"github.com/saferun/owl/pkg/utf16"
 )
 
-func Parse(etype EType, evt *tdh.EventRecord, info *tdh.TraceEventInfo) map[string]interface{} {
+func Parse(etype EType, evt *tdh.EventRecord, info *tdh.TraceEventInfo) []Param {
 	var (
 		count  = info.PropertyCount
-		params = make(map[string]interface{}, count)
+		params = make([]Param, 0)
 		props  = (*[1 << 30]tdh.EventPropertyInfo)(unsafe.Pointer(&info.EventPropertyInfoArray[0]))[:count:count]
 	)
 
@@ -65,7 +65,7 @@ func Parse(etype EType, evt *tdh.EventRecord, info *tdh.TraceEventInfo) map[stri
 			continue
 		}
 
-		params[param.Name] = param.Value
+		params = append(params, *param)
 	}
 
 	return params
