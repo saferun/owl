@@ -15,6 +15,9 @@ package stream
 
 import (
 	"fmt"
+
+	"github.com/saferun/owl/internal/app/event"
+	"github.com/sirupsen/logrus"
 )
 
 type Consumer struct {
@@ -35,7 +38,7 @@ func (c *Consumer) Run() error {
 		for {
 			select {
 			case evt := <-c.Queue:
-				fmt.Println(evt.EType.String(), evt.Params)
+				logrus.Info(evt.Format())
 
 			case <-c.Quit:
 				return
@@ -44,4 +47,19 @@ func (c *Consumer) Run() error {
 	}()
 
 	return nil
+}
+
+type Event struct {
+	EType  event.EType
+	Params []event.Param
+}
+
+func (e *Event) Format() string {
+	var tmpstr string
+
+	for _, p := range e.Params {
+		tmpstr += fmt.Sprintf(" | %s:%s", p.Name, p.String())
+	}
+
+	return fmt.Sprintf("%s {%s}", e.EType.String(), tmpstr)
 }

@@ -72,11 +72,6 @@ func (p *Producer) BufferStatsCallback(*evntrace.EventTraceLogFile) uintptr {
 	return callbackNext
 }
 
-type Event struct {
-	EType  event.EType
-	Params []event.Param
-}
-
 func (p *Producer) ProcessEventCallback(evt *tdh.EventRecord) uintptr {
 
 	etype := event.Pack(syscall.GUID(evt.EventHeader.ProviderId),

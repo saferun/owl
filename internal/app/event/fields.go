@@ -16,6 +16,9 @@ package event
 import (
 	"errors"
 	"fmt"
+	"net"
+	"strconv"
+	"time"
 	"unsafe"
 
 	"github.com/mel2oo/win32/tdh"
@@ -126,6 +129,58 @@ func getParam(name string, buffer []types.BYTE, size types.ULONG, nonStructType 
 	return &Param{name, typ, val}, nil
 }
 
+func (p *Param) String() string {
+	if p.Value == nil {
+		return ""
+	}
+
+	switch p.Type {
+	case UnicodeString, AnsiString, SID, WbemSID:
+		return p.Value.(string)
+	case HexInt32, HexInt64, HexInt16, HexInt8:
+		return string(p.Value.(Hex))
+	case Int8:
+		return strconv.Itoa(int(p.Value.(int8)))
+	case Uint8:
+		return strconv.Itoa(int(p.Value.(uint8)))
+	case Int16:
+		return strconv.Itoa(int(p.Value.(int16)))
+	case Uint16, Port:
+		return strconv.Itoa(int(p.Value.(uint16)))
+	case Uint32, PID, TID:
+		return strconv.Itoa(int(p.Value.(uint32)))
+	case Int32:
+		return strconv.Itoa(int(p.Value.(int32)))
+	case Uint64:
+		return strconv.FormatUint(p.Value.(uint64), 10)
+	case Int64:
+		return strconv.Itoa(int(p.Value.(int64)))
+	case IPv4, IPv6:
+		return p.Value.(net.IP).String()
+	case Bool:
+		return strconv.FormatBool(p.Value.(bool))
+	case Float:
+		return strconv.FormatFloat(float64(p.Value.(float32)), 'f', 6, 32)
+	case Double:
+		return strconv.FormatFloat(p.Value.(float64), 'f', 6, 64)
+	case Time:
+		return p.Value.(time.Time).String()
+	// case Enum:
+	// 	switch typ := p.Value.(type) {
+	// 	case fs.FileShareMode:
+	// 		return typ.String()
+	// 	case networp.L4Proto:
+	// 		return typ.String()
+	// 	case fs.FileDisposition:
+	// 		return typ.String()
+	// 	default:
+	// 		return fmt.Sprintf("%v", p.Value)
+	// 	}
+	default:
+		return fmt.Sprintf("%v", p.Value)
+	}
+}
+
 const (
 	// NTStatus is the parameter that identifies the NTSTATUS value.
 	NTStatus = "status"
@@ -161,13 +216,13 @@ const (
 	IOPrio = "io_prio"
 	// PagePrio field denotes page priority.
 	PagePrio = "page_prio"
-	// KstackBase field is the start address of the kernel space stack.
+	// KstackBase field is the start address of the kernel space stacp.
 	KstackBase = "kstack"
-	// KstackLimit field is the end address of the kernel space stack.
+	// KstackLimit field is the end address of the kernel space stacp.
 	KstackLimit = "kstack_limit"
-	// UstackBase field is the start address of the user space stack.
+	// UstackBase field is the start address of the user space stacp.
 	UstackBase = "ustack"
-	// UstackLimit field is the end address of the user space stack.
+	// UstackLimit field is the end address of the user space stacp.
 	UstackLimit = "ustack_limit"
 	// ThreadEntrypoint field is the address of the thread main function.
 	ThreadEntrypoint = "entrypoint"
@@ -186,7 +241,7 @@ const (
 	FileAccessed = "accessed"
 	// FileModified represents the name for the file modification field.
 	FileModified = "modified"
-	// FileShareMask represents the field name for the share access mask.
+	// FileShareMask represents the field name for the share access masp.
 	FileShareMask = "share_mask"
 	// FileType represents the field name that indicates the file type.
 	FileType = "type"
