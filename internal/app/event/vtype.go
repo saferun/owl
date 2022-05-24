@@ -18,7 +18,6 @@ import (
 )
 
 const (
-	// NA defines absent parameter's value
 	NA = "na"
 )
 
